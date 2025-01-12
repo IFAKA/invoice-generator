@@ -1,0 +1,32 @@
+name: Monthly Invoice Generation
+
+on:
+  schedule:
+    - cron: "0 0 1 * *" # Runs at 00:00 on the first day of every month
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  generate-invoice:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "22"
+      - run: npm ci
+      - name: Generate and Send Invoice
+        env:
+          AUTH_USER: ${{ secrets.AUTH_USER }}
+          AUTH_PASS: ${{ secrets.AUTH_PASS }}
+          EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
+          INVOICE_TOTAL_AMOUNT: ${{ secrets.INVOICE_TOTAL_AMOUNT }}
+        run: node src/index.js
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/data/invoiceData.json
+          git commit -m "Update invoice number" || echo "No changes to commit"
+          git push

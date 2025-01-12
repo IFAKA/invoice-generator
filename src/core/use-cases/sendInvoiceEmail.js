@@ -5,10 +5,9 @@ import getPdfContent from "./getPdfContent.js";
 
 const sendInvoiceEmail = async () => {
   const transporter = emailUtils.createEmailTransporter();
-  const invoiceNumber = generateNewInvoiceNumber();
-  const content = getPdfContent({ invoiceNumber });
-
   try {
+    const invoiceNumber = await generateNewInvoiceNumber();
+    const content = getPdfContent({ invoiceNumber });
     const pdfBuffer = await createPDF({ content });
     const mailOptions = emailUtils.gettMailOptions({
       invoiceNumber,

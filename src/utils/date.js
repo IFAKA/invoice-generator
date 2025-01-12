@@ -1,10 +1,11 @@
-import { lastDayOfMonth, format } from "date-fns";
+import { subMonths, lastDayOfMonth, format } from "date-fns";
 import { es } from "date-fns/locale";
 
 function getLastMonthDate() {
-  const lastDate = lastDayOfMonth(new Date());
+  const today = new Date();
+  const lastMonthDate = lastDayOfMonth(subMonths(today, 1));
 
-  return format(lastDate, "dd/MM/yyyy", { locale: es });
+  return format(lastMonthDate, "dd/MM/yyyy", { locale: es });
 }
 
 const capitalize = (string) => {
