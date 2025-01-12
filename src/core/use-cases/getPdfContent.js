@@ -1,18 +1,19 @@
 import dateUtils from "../../utils/date.js";
 
 const TOTAL_AMOUNT = process.env.INVOICE_TOTAL_AMOUNT;
+const YEAR_INDEX = 2; // The year is always the third part in dd/MM/yyyy format
 
 const getPdfContent = ({ invoiceNumber }) => {
   const amount = TOTAL_AMOUNT;
-  const year = new Date().getFullYear();
-  const date = dateUtils.getLastMonthDate();
+  const dateString = dateUtils.getLastMonthDate();
+  const year = dateString.split("/")[YEAR_INDEX];
 
   const content = [
     {
       text: `\nFactura N°: ${invoiceNumber}/${year}`,
       options: { align: "left" },
     },
-    { text: `Fecha: ${date}`, options: { align: "left" } },
+    { text: `Fecha: ${dateString}`, options: { align: "left" } },
 
     {
       text: "\n\n\nDATOS EMISOR:",
