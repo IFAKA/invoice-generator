@@ -41,10 +41,10 @@ const getPdfContent = ({ invoiceNumber, invoiceDate, invoiceYear, amount }) => {
 
     { text: "\nFORMA DE PAGO:", options: { align: "left", underline: true } },
     {
-      text: "Mediante transferencia bancaria a nombre de Facundo Arenas, en la entidad Santander con número de cuenta:",
+      text: "Mediante transferencia bancaria a nombre de Facundo Arenas, en la entidad BBVA con número de cuenta:",
       options: { align: "left", width: 250 },
     },
-    { text: "ES40 0049 4998 2425 1647 7408", options: { align: "left" } },
+    { text: "ES09 0182 9034 5202 0166 3606", options: { align: "left" } },
   ];
 };
 
