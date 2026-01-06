@@ -6,21 +6,19 @@ import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const generateNewInvoiceNumber = async () => {
+const generateNewInvoiceNumber = async (invoiceYear) => {
   const dataFilePath = path.join(__dirname, "../data/invoiceData.json");
 
   let data;
   try {
     data = JSON.parse(await fs.readFile(dataFilePath, "utf8"));
   } catch (error) {
-    data = { lastInvoiceNumber: 0, lastResetYear: new Date().getFullYear() };
+    data = { lastInvoiceNumber: 0, lastResetYear: invoiceYear };
   }
 
-  const currentYear = new Date().getFullYear();
-
-  if (currentYear > data.lastResetYear) {
+  if (invoiceYear > data.lastResetYear) {
     data.lastInvoiceNumber = 0;
-    data.lastResetYear = currentYear;
+    data.lastResetYear = invoiceYear;
   }
 
   const newInvoiceNumber = data.lastInvoiceNumber + 1;
@@ -30,7 +28,7 @@ const generateNewInvoiceNumber = async () => {
     JSON.stringify(
       {
         lastInvoiceNumber: newInvoiceNumber,
-        lastResetYear: currentYear,
+        lastResetYear: invoiceYear,
       },
       null,
       2

@@ -2,11 +2,14 @@ import emailUtils from "../../infrastructure/email.js";
 import createPDF from "../../infrastructure/pdf.js";
 import generateNewInvoiceNumber from "../../utils/jsonHelper.js";
 import getPdfContent from "./getPdfContent.js";
+import dateUtils from "../../utils/date.js";
 
 const sendInvoiceEmail = async () => {
   const transporter = emailUtils.createEmailTransporter();
   try {
-    const invoiceNumber = await generateNewInvoiceNumber();
+    const dateString = dateUtils.getLastMonthDate();
+    const invoiceYear = parseInt(dateString.split("/")[2], 10);
+    const invoiceNumber = await generateNewInvoiceNumber(invoiceYear);
     const content = getPdfContent({ invoiceNumber });
     const pdfBuffer = await createPDF({ content });
     const mailOptions = emailUtils.gettMailOptions({
