@@ -1,7 +1,11 @@
-const getPdfContent = ({ invoiceNumber, invoiceDate, invoiceYear, amount }) => {
+const DEFAULT_DESCRIPTION = "Desarrollo de una funcionalidad para una aplicación web";
+
+const getPdfContent = ({ invoiceNumber, invoiceDate, invoiceYear, amount, description }) => {
   if (!amount) {
     throw new Error("INVOICE_TOTAL_AMOUNT environment variable is not set");
   }
+
+  const serviceDescription = description || DEFAULT_DESCRIPTION;
 
   return [
     {
@@ -26,7 +30,7 @@ const getPdfContent = ({ invoiceNumber, invoiceDate, invoiceYear, amount }) => {
     },
 
     {
-      text: "\n\n\n\nDesarrollo de una funcionalidad para una aplicación web",
+      text: `\n\n\n\n${serviceDescription}`,
       options: { continued: true },
     },
     { text: `$${amount}`, options: { align: "right" } },

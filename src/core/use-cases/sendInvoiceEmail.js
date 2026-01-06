@@ -7,13 +7,14 @@ import dateUtils from "../../utils/date.js";
 const sendInvoiceEmail = async () => {
   const transporter = emailUtils.createEmailTransporter();
 
-  // Calculate invoice data once
-  const invoiceDate = dateUtils.getLastMonthDate();
+  // Use custom date if provided, otherwise last month
+  const invoiceDate = process.env.CUSTOM_DATE || dateUtils.getLastMonthDate();
   const invoiceYear = parseInt(invoiceDate.split("/")[2], 10);
   const amount = process.env.INVOICE_TOTAL_AMOUNT;
+  const description = process.env.CUSTOM_DESCRIPTION || null;
 
   const invoiceNumber = await generateNewInvoiceNumber(invoiceYear);
-  const content = getPdfContent({ invoiceNumber, invoiceDate, invoiceYear, amount });
+  const content = getPdfContent({ invoiceNumber, invoiceDate, invoiceYear, amount, description });
   const pdfBuffer = await createPDF({ content });
   const mailOptions = emailUtils.getMailOptions({
     invoiceNumber,

@@ -3,7 +3,20 @@ name: Monthly Invoice Generation
 on:
   schedule:
     - cron: "0 0 1 * *" # Runs at 00:00 on the first day of every month
-  workflow_dispatch: # Allows manual triggering
+  workflow_dispatch:
+    inputs:
+      custom_amount:
+        description: "Custom amount (leave empty for default)"
+        required: false
+        type: string
+      custom_date:
+        description: "Custom date DD/MM/YYYY (leave empty for last month)"
+        required: false
+        type: string
+      custom_description:
+        description: "Custom service description (leave empty for default)"
+        required: false
+        type: string
 
 jobs:
   generate-invoice:
@@ -21,7 +34,9 @@ jobs:
           AUTH_PASS: ${{ secrets.AUTH_PASS }}
           EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
           EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
-          INVOICE_TOTAL_AMOUNT: ${{ secrets.INVOICE_TOTAL_AMOUNT }}
+          INVOICE_TOTAL_AMOUNT: ${{ inputs.custom_amount || secrets.INVOICE_TOTAL_AMOUNT }}
+          CUSTOM_DATE: ${{ inputs.custom_date }}
+          CUSTOM_DESCRIPTION: ${{ inputs.custom_description }}
         run: node src/index.js
       - name: Commit changes
         run: |
