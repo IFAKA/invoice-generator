@@ -6,22 +6,23 @@ import dateUtils from "../../utils/date.js";
 
 const sendInvoiceEmail = async () => {
   const transporter = emailUtils.createEmailTransporter();
-  try {
-    const dateString = dateUtils.getLastMonthDate();
-    const invoiceYear = parseInt(dateString.split("/")[2], 10);
-    const invoiceNumber = await generateNewInvoiceNumber(invoiceYear);
-    const content = getPdfContent({ invoiceNumber });
-    const pdfBuffer = await createPDF({ content });
-    const mailOptions = emailUtils.gettMailOptions({
-      invoiceNumber,
-      pdfFile: pdfBuffer,
-    });
 
-    await transporter.sendMail(mailOptions);
-    console.log("Invoice sent successfully");
-  } catch (error) {
-    console.error("Error sending email:", error);
-  }
+  // Calculate invoice data once
+  const invoiceDate = dateUtils.getLastMonthDate();
+  const invoiceYear = parseInt(invoiceDate.split("/")[2], 10);
+  const amount = process.env.INVOICE_TOTAL_AMOUNT;
+
+  const invoiceNumber = await generateNewInvoiceNumber(invoiceYear);
+  const content = getPdfContent({ invoiceNumber, invoiceDate, invoiceYear, amount });
+  const pdfBuffer = await createPDF({ content });
+  const mailOptions = emailUtils.getMailOptions({
+    invoiceNumber,
+    invoiceDate,
+    pdfFile: pdfBuffer,
+  });
+
+  await transporter.sendMail(mailOptions);
+  console.log("Invoice sent successfully");
 };
 
 export default sendInvoiceEmail;

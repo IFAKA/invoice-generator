@@ -1,19 +1,14 @@
-import dateUtils from "../../utils/date.js";
+const getPdfContent = ({ invoiceNumber, invoiceDate, invoiceYear, amount }) => {
+  if (!amount) {
+    throw new Error("INVOICE_TOTAL_AMOUNT environment variable is not set");
+  }
 
-const TOTAL_AMOUNT = process.env.INVOICE_TOTAL_AMOUNT;
-const YEAR_INDEX = 2; // The year is always the third part in dd/MM/yyyy format
-
-const getPdfContent = ({ invoiceNumber }) => {
-  const amount = TOTAL_AMOUNT;
-  const dateString = dateUtils.getLastMonthDate();
-  const year = dateString.split("/")[YEAR_INDEX];
-
-  const content = [
+  return [
     {
-      text: `\nFactura N°: ${invoiceNumber}/${year}`,
+      text: `\nFactura N°: ${String(invoiceNumber).padStart(3, "0")}/${invoiceYear}`,
       options: { align: "left" },
     },
-    { text: `Fecha: ${dateString}`, options: { align: "left" } },
+    { text: `Fecha: ${invoiceDate}`, options: { align: "left" } },
 
     {
       text: "\n\n\nDATOS EMISOR:",
@@ -37,7 +32,7 @@ const getPdfContent = ({ invoiceNumber }) => {
     { text: `$${amount}`, options: { align: "right" } },
 
     {
-      text: "\nFactura no sujeta al Impuesto al Valor Añadido del Reino de España, de conformidad con lo establecido en lo establecido en el artículo 69.Uno y 69.Dos de la Ley 37/1992, del 28 de diciembre, de Impuesto al Valor Añadido",
+      text: "\nFactura no sujeta al Impuesto al Valor Añadido del Reino de España, de conformidad con lo establecido en el artículo 69.Uno y 69.Dos de la Ley 37/1992, del 28 de diciembre, de Impuesto al Valor Añadido",
       options: { align: "left", width: 350 },
     },
 
@@ -49,10 +44,8 @@ const getPdfContent = ({ invoiceNumber }) => {
       text: "Mediante transferencia bancaria a nombre de Facundo Arenas, en la entidad Santander con número de cuenta:",
       options: { align: "left", width: 250 },
     },
-    { text: "ES40 004 9 49 98 2 425 1647 740 8", options: { align: "left" } },
+    { text: "ES40 0049 4998 2425 1647 7408", options: { align: "left" } },
   ];
-
-  return content;
 };
 
 export default getPdfContent;

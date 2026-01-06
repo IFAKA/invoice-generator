@@ -1,7 +1,5 @@
 import nodemailer from "nodemailer";
-import dateUtils from "../utils/date.js";
 
-// Create an email transporter using Gmail SMTP
 const createEmailTransporter = () => {
   return nodemailer.createTransport({
     service: "gmail",
@@ -12,32 +10,28 @@ const createEmailTransporter = () => {
   });
 };
 
-const gettMailOptions = ({ invoiceNumber, pdfFile }) => {
-  const now = new Date();
-  const day = String(now.getDate()).padStart(2, "0");
-  const month = now.getMonth() + 1;
-  const longMonth = dateUtils.capitalize(
-    now.toLocaleString("es-ES", { month: "long" })
-  );
-  const twoDigitMonth = String(month).padStart(2, "0");
-  const year = now.getFullYear();
-  const formatedInvoiceNumber = String(invoiceNumber).padStart(3, "0");
+const getMailOptions = ({ invoiceNumber, invoiceDate, pdfFile }) => {
+  const [day, month, year] = invoiceDate.split("/");
+  const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+  const longMonth = monthNames[parseInt(month, 10) - 1];
+  const formattedInvoiceNumber = String(invoiceNumber).padStart(3, "0");
 
-  const emailOptions = {
+  return {
     from: process.env.EMAIL_SENDER,
     to: process.env.EMAIL_RECIPIENT,
     subject: `Factura Mensual ${longMonth} de ${year}`,
-    text: `Adjunto encontrarás la factura N°${formatedInvoiceNumber} correspondiente al mes ${month} del año ${year}.`,
+    text: `Adjunto encontrarás la factura N°${formattedInvoiceNumber} correspondiente al mes ${month} del año ${year}.`,
     attachments: [
       {
-        filename: `${formatedInvoiceNumber}-invoice-${day}-${twoDigitMonth}-${year}.pdf`,
+        filename: `${formattedInvoiceNumber}-invoice-${day}-${month}-${year}.pdf`,
         content: pdfFile,
         contentType: "application/pdf",
       },
     ],
   };
-
-  return emailOptions;
 };
 
-export default { createEmailTransporter, gettMailOptions };
+export default { createEmailTransporter, getMailOptions };
