@@ -10,9 +10,10 @@ on:
         required: false
         type: string
       custom_date:
-        description: "Custom date DD/MM/YYYY (leave empty for last month)"
+        description: "Invoice date (e.g. 31/12/2025) - leave empty for auto"
         required: false
         type: string
+        default: ""
       custom_description:
         description: "Custom service description (leave empty for default)"
         required: false
