@@ -1,6 +1,8 @@
+import type { InvoiceParams, PdfContentItem } from "../../types.js";
+
 const DEFAULT_DESCRIPTION = "Desarrollo de una funcionalidad para una aplicación web";
 
-const getPdfContent = ({ invoiceNumber, invoiceDate, invoiceYear, amount, description }) => {
+const getPdfContent = ({ invoiceNumber, invoiceDate, invoiceYear, amount, description }: InvoiceParams): PdfContentItem[] => {
   if (!amount) {
     throw new Error("INVOICE_TOTAL_AMOUNT environment variable is not set");
   }

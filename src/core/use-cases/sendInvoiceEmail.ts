@@ -1,16 +1,15 @@
 import emailUtils from "../../infrastructure/email.js";
 import createPDF from "../../infrastructure/pdf.js";
-import generateNewInvoiceNumber from "../../utils/jsonHelper.js";
+import generateNewInvoiceNumber from "../../utils/invoiceNumber.js";
 import getPdfContent from "./getPdfContent.js";
 import dateUtils from "../../utils/date.js";
 
-const sendInvoiceEmail = async () => {
+const sendInvoiceEmail = async (): Promise<void> => {
   const transporter = emailUtils.createEmailTransporter();
 
-  // Use custom date if provided, otherwise last month
   const invoiceDate = process.env.CUSTOM_DATE || dateUtils.getLastMonthDate();
   const invoiceYear = parseInt(invoiceDate.split("/")[2], 10);
-  const amount = process.env.INVOICE_TOTAL_AMOUNT;
+  const amount = process.env.INVOICE_TOTAL_AMOUNT || "";
   const description = process.env.CUSTOM_DESCRIPTION || null;
 
   const invoiceNumber = await generateNewInvoiceNumber(invoiceYear);

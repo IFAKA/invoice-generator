@@ -2,17 +2,18 @@ import * as fs from "node:fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import type { InvoiceData } from "../types.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const generateNewInvoiceNumber = async (invoiceYear) => {
-  const dataFilePath = path.join(__dirname, "../data/invoiceData.json");
+const generateNewInvoiceNumber = async (invoiceYear: number): Promise<number> => {
+  const dataFilePath = path.join(__dirname, "../../data/invoiceData.json");
 
-  let data;
+  let data: InvoiceData;
   try {
     data = JSON.parse(await fs.readFile(dataFilePath, "utf8"));
-  } catch (error) {
+  } catch {
     data = { lastInvoiceNumber: 0, lastResetYear: invoiceYear };
   }
 

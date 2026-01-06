@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import type { MailOptionsParams } from "../types.js";
 
 const createEmailTransporter = () => {
   return nodemailer.createTransport({
@@ -10,7 +11,7 @@ const createEmailTransporter = () => {
   });
 };
 
-const getMailOptions = ({ invoiceNumber, invoiceDate, pdfFile }) => {
+const getMailOptions = ({ invoiceNumber, invoiceDate, pdfFile }: MailOptionsParams) => {
   const [day, month, year] = invoiceDate.split("/");
   const monthNames = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -28,7 +29,7 @@ const getMailOptions = ({ invoiceNumber, invoiceDate, pdfFile }) => {
       {
         filename: `${formattedInvoiceNumber}-invoice-${day}-${month}-${year}.pdf`,
         content: pdfFile,
-        contentType: "application/pdf",
+        contentType: "application/pdf" as const,
       },
     ],
   };

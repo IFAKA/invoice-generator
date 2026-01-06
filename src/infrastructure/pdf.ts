@@ -1,11 +1,16 @@
 import PDFDocument from "pdfkit";
+import type { PdfContentItem } from "../types.js";
 
-const createPDF = async ({ content }) => {
+interface CreatePdfParams {
+  content: PdfContentItem[];
+}
+
+const createPDF = async ({ content }: CreatePdfParams): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument();
-    const buffers = [];
+    const buffers: Buffer[] = [];
 
-    doc.on("data", buffers.push.bind(buffers));
+    doc.on("data", (chunk: Buffer) => buffers.push(chunk));
     doc.on("end", () => {
       const pdfBuffer = Buffer.concat(buffers);
       resolve(pdfBuffer);
