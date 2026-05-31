@@ -27,7 +27,7 @@ const getPdfContent = ({ invoiceNumber, invoiceDate, invoiceYear, amount, descri
 
     { text: "\nDATOS CLIENTE:", options: { align: "left", underline: true } },
     {
-      text: "Intersoftware LLC\nL21000252720\n2400 Southeast Veterans Memorial Parkway\n34952, Port St. Lucie, FL, Estados Unidos",
+      text: "Singularmind LLC\nEIN: 30-1446897\n2604 Whittier Pl Parkway\nWilmington, DE 19808\nUnited States",
       options: { align: "left" },
     },
 
