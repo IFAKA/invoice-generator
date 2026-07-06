@@ -6,6 +6,7 @@ async function main(): Promise<void> {
     await sendInvoiceEmail();
   } catch (error) {
     console.error("Error:", error);
+    process.exitCode = 1;
   }
 }
 
